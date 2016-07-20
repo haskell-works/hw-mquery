@@ -26,8 +26,6 @@ import           HaskellWorks.Diagnostics.Time
 import           System.IO
 import           System.IO.MMap
 
-type ForeignRegion = (ForeignPtr Word8, Int, Int)
-
 -- | Write out a vector verbatim into an open file handle.
 hPutVector :: forall a. Storable a => Handle -> DVS.Vector a -> IO ()
 hPutVector h v = withForeignPtr fp $ \p -> hPutBuf h (p `plusPtr` offset) sz
@@ -59,12 +57,6 @@ loadByteString filepath = do
   (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr filepath ReadOnly Nothing
   let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
   return bs
-
-instance FromForeignRegion BS.ByteString where
-  fromForeignRegion (fptr, offset, size) = BSI.fromForeignPtr (castForeignPtr fptr) offset size
-
-instance FromForeignRegion (DVS.Vector Word64) where
-  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
 loadJsonWithIndex :: String -> IO JsonPartialValue
 loadJsonWithIndex filename = do

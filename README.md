@@ -37,3 +37,11 @@ do
     return v
 :}
 ```
+
+```
+import HaskellWorks.Data.MQuery
+import qualified Data.DList as DL
+!json <- loadJsonWithIndex "data/78mb.json"
+let q = MQuery (DL.singleton json)
+q >>= expandArray >>= expandObject
+```

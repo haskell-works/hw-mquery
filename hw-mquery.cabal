@@ -31,7 +31,7 @@ library
                       , hw-diagnostics
                       , hw-json
                       , hw-parser
-                      , hw-prim                       >= 0.0.3.1
+                      , hw-prim                       >= 0.0.3.3
                       , hw-rankselect                 >= 0.0.0.5
                       , mmap
                       , mono-traversable
