@@ -15,16 +15,21 @@ cabal-version:          >= 1.22
 
 library
   hs-source-dirs:       src
-  exposed-modules:      HaskellWorks.Data.MQuery
+  exposed-modules:      HaskellWorks.Data.LoadJson
+                      , HaskellWorks.Data.Micro
+                      , HaskellWorks.Data.Mini
+                      , HaskellWorks.Data.MQuery
   build-depends:        base                          >= 4          && < 5
                       , array
                       , attoparsec
                       , bytestring
                       , conduit
                       , containers
+                      , dlist
                       , hw-bits
                       , hw-conduit
                       , hw-diagnostics
+                      , hw-json
                       , hw-parser
                       , hw-prim                       >= 0.0.3.1
                       , hw-rankselect                 >= 0.0.0.5
