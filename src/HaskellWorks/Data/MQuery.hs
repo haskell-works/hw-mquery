@@ -19,8 +19,26 @@ deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
+class AtLeastSize a where
+  atLeastSize :: [a] -> Int -> Bool
+
+instance AtLeastSize [a] where
+  atLeastSize  _      0         = True
+  atLeastSize (_:as)  n | n > 0 = atLeastSize as (n - 1)
+  atLeastSize  _      _         = False
+
 instance Show (MQuery JsonPartialValue) where
   showsPrec _ (MQuery das) = shows (Mini (Mini `fmap` das))
+
+instance Show (MQuery String) where
+  showsPrec _ (MQuery das) = case DL.toList das of
+    as | as `atLeastSize` 100 -> ("[" ++) . showVs (take 100 as) . (", ..]" ++)
+    []                        -> ("[]" ++)
+    as                        -> ("[" ++) . showVs (take 100 as) . ("]" ++)
+    where
+      showVs :: [String] -> String -> String
+      showVs (kv:kvs) = shows kv . foldl (.) id ((\jv -> (", " ++) . shows jv) `map` kvs)
+      showVs []       = id
 
 instance Show (MQuery (String, JsonPartialValue)) where
   showsPrec _ (MQuery das) = shows (Mini (Mini `fmap` das))
