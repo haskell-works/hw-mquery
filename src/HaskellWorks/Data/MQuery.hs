@@ -8,8 +8,10 @@ module HaskellWorks.Data.MQuery where
 import           Control.Monad
 import qualified Data.DList                           as DL
 import           GHC.Base
+import           HaskellWorks.Data.AtLeastSize
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Mini
+import           HaskellWorks.Data.Shows
 
 newtype MQuery a = MQuery (DL.DList a)
 
@@ -19,29 +21,17 @@ deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
-class AtLeastSize a where
-  atLeastSize :: [a] -> Int -> Bool
-
-instance AtLeastSize [a] where
-  atLeastSize  _      0         = True
-  atLeastSize (_:as)  n | n > 0 = atLeastSize as (n - 1)
-  atLeastSize  _      _         = False
-
 instance Show (MQuery JsonPartialValue) where
-  showsPrec _ (MQuery das) = shows (Mini (Mini `fmap` das))
+  showsPrec _ (MQuery das) = shows (Mini das)
 
 instance Show (MQuery String) where
   showsPrec _ (MQuery das) = case DL.toList das of
-    as | as `atLeastSize` 100 -> ("[" ++) . showVs (take 100 as) . (", ..]" ++)
+    as | as `atLeastSize` 100 -> ("[" ++) . showsVs (take 100 as) . (", ..]" ++)
     []                        -> ("[]" ++)
-    as                        -> ("[" ++) . showVs (take 100 as) . ("]" ++)
-    where
-      showVs :: [String] -> String -> String
-      showVs (kv:kvs) = shows kv . foldl (.) id ((\jv -> (", " ++) . shows jv) `map` kvs)
-      showVs []       = id
+    as                        -> ("[" ++) . showsVs (take 100 as) . ("]" ++)
 
 instance Show (MQuery (String, JsonPartialValue)) where
-  showsPrec _ (MQuery das) = shows (Mini (Mini `fmap` das))
+  showsPrec _ (MQuery das) = shows (Mini das)
 
 expandArray :: JsonPartialValue -> MQuery JsonPartialValue
 expandArray jpv = case jpv of
