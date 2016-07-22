@@ -23,7 +23,7 @@ deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
 instance Pretty (MQuery JsonPartialValue) where
-  pretty (MQuery das) = pretty (Mini das)
+  pretty (MQuery das) = pretty (Row das)
 
 instance Pretty (MQuery String) where
   pretty (MQuery das) = case DL.toList das of

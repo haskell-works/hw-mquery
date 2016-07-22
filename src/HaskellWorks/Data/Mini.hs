@@ -12,13 +12,18 @@ import           Text.PrettyPrint.ANSI.Leijen
 
 newtype Mini a = Mini a
 
+newtype Row a = Row a
+
 instance Pretty (Micro a) => Pretty (Mini [a]) where
-  pretty (Mini xs) | xs `atLeastSize` 11  = text "[" <> prettyVs (take 10 (Micro `map` xs)) <> text ", ..]"
-  pretty (Mini xs) | xs `atLeastSize` 1   = text "[" <> prettyVs (take 10 (Micro `map` xs)) <> text "]"
+  pretty (Mini xs) | xs `atLeastSize` 11  = text "[" <> nest 2 (prettyVs (take 10 (Micro `map` xs))) <> text ", ..]"
+  pretty (Mini xs) | xs `atLeastSize` 1   = text "[" <> nest 2 (prettyVs (take 10 (Micro `map` xs))) <> text "]"
   pretty (Mini _ )                        = text "[]"
 
-instance Pretty (Micro a) => Pretty (Mini (DL.DList a)) where
-  pretty (Mini xs) = pretty (Mini (DL.toList xs))
+instance Pretty (Mini a) => Pretty (Mini (DL.DList a)) where
+  pretty (Mini xs) = vcat (punctuate (text ",") ((pretty . Mini) `map` take 10 (DL.toList xs)))
+
+instance Pretty (Mini a) => Pretty (Row (DL.DList a)) where
+  pretty (Row xs) = vcat (punctuate (text ",") ((pretty . Mini) `map` take 10 (DL.toList xs)))
 
 instance Pretty (Mini JsonPartialValue) where
   pretty mjpv = case mjpv of
@@ -30,8 +35,8 @@ instance Pretty (Mini JsonPartialValue) where
       []                          -> text "{}"
       _                           -> text "{" <> prettyKvs kvs <> text "}"
     Mini (JsonPartialArray []   ) -> text "[]"
-    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 11 -> text "[" <> prettyVs (Micro `map` take 10 vs) <> text ", ..]"
-    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 1  -> text "[" <> prettyVs (Micro `map` take 10 vs) <> text "]"
+    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 11 -> text "[" <> nest 2 (prettyVs (Micro `map` take 10 vs)) <> text ", ..]"
+    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 1  -> text "[" <> nest 2 (prettyVs (Micro `map` take 10 vs)) <> text "]"
     Mini (JsonPartialArray _    )                       -> text "[]"
     Mini (JsonPartialBool w     ) -> red (text (show w))
     Mini  JsonPartialNull         -> text "null"

@@ -15,7 +15,7 @@ prettyVs (kv:kvs) = pretty kv <> foldl (<>) empty ((\jv -> text ", " <> pretty j
 prettyVs []       = empty
 
 putPretty :: Pretty a => a -> IO ()
-putPretty = putDoc . pretty
+putPretty a = putDoc (pretty a <> hardline)
 
 prettyKvs :: Pretty (Micro a) => [a] -> Doc
 prettyKvs (kv:kvs) = pretty (Micro kv) <> foldl (<>) empty ((\jv -> text ", " <> pretty (Micro jv)) `map` kvs)
@@ -38,8 +38,8 @@ instance Pretty (Micro (String, JsonPartialValue)) where
 instance Pretty a => Pretty (Micro [a]) where
   pretty (Micro xs) = case length xs of
     xsLen | xsLen == 0    -> text "[]"
-    xsLen | xsLen <= 50   -> text "[" <> prettyVs xs <> text "]"
-    _                     -> text "[" <> prettyVs (take 50 xs) <> text ", ..]"
+    xsLen | xsLen <= 10   -> text "[" <> prettyVs xs <> text "]"
+    _                     -> text "[" <> prettyVs (take 10 xs) <> text ", ..]"
 
 instance Pretty a => Pretty (Micro (DL.DList a)) where
   pretty (Micro dxs) = case DL.toList dxs of
