@@ -23,7 +23,7 @@ instance Pretty (Mini a) => Pretty (Mini (DL.DList a)) where
   pretty (Mini xs) = vcat (punctuate (text ",") ((pretty . Mini) `map` take 10 (DL.toList xs)))
 
 instance Pretty (Mini a) => Pretty (Row (DL.DList a)) where
-  pretty (Row xs) = vcat (punctuate (text ",") ((pretty . Mini) `map` take 10 (DL.toList xs)))
+  pretty (Row xs) = vcat ((((bold . yellow) (text "==> ") <> ). pretty . Mini) `map` take 10 (DL.toList xs))
 
 instance Pretty (Mini JsonPartialValue) where
   pretty mjpv = case mjpv of
