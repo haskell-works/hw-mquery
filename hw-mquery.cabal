@@ -24,6 +24,7 @@ library
   build-depends:        base                          >= 4          && < 5
                       , array
                       , attoparsec
+                      , ansi-wl-pprint
                       , bytestring
                       , conduit
                       , containers
@@ -37,6 +38,7 @@ library
                       , hw-rankselect                 >= 0.0.0.5
                       , mmap
                       , mono-traversable
+                      , pretty
                       , resourcet
                       , text
                       , vector

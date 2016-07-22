@@ -3,20 +3,23 @@
 
 ```
 import HaskellWorks.Data.LoadJson
+import HaskellWorks.Data.Micro
 import HaskellWorks.Data.MQuery
+import Text.PrettyPrint.ANSI.Leijen
 import qualified Data.DList as DL
-!json <- loadJsonPartial "data/78mb.json"
-let q = MQuery (DL.singleton json)
-q >>= expandArray >>= expandObject
 ```
 
 ```
-import HaskellWorks.Data.MQuery
-import qualified Data.DList as DL
+!json <- loadJsonPartial "data/78mb.json"
+let q = MQuery (DL.singleton json)
+putPretty $ q >>= expandArray >>= expandObject
+```
+
+```
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
 :{
-do
+putPretty $ do
     j <- q
     e <- expandArray j
     (k, v) <- expandObject e
@@ -25,13 +28,10 @@ do
 ```
 
 ```
-import Control.Monad
-import HaskellWorks.Data.MQuery
-import qualified Data.DList as DL
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
 :{
-do
+putPretty $ do
     j <- q
     e <- expandArray j
     (k, v) <- expandObject e
@@ -41,9 +41,7 @@ do
 ```
 
 ```
-import HaskellWorks.Data.MQuery
-import qualified Data.DList as DL
 !json <- loadJsonWithIndex "data/78mb.json"
 let q = MQuery (DL.singleton json)
-q >>= expandArray >>= expandObject
+putPretty $ q >>= expandArray >>= expandObject
 ```

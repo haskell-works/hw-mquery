@@ -8,34 +8,34 @@ import qualified Data.DList                           as DL
 import           HaskellWorks.Data.AtLeastSize
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Micro
-import           HaskellWorks.Data.Shows
+import           Text.PrettyPrint.ANSI.Leijen
 
 newtype Mini a = Mini a
 
-instance Show (Micro a) => Show (Mini [a]) where
-  showsPrec _ (Mini xs) | xs `atLeastSize` 11  = ("[" ++) . showsVs (take 10 (Micro `map` xs)) . (", ..]"  ++)
-  showsPrec _ (Mini xs) | xs `atLeastSize` 1   = ("[" ++) . showsVs (take 10 (Micro `map` xs)) . ("]"      ++)
-  showsPrec _ (Mini _ )                        = ("[]"                                                     ++)
+instance Pretty (Micro a) => Pretty (Mini [a]) where
+  pretty (Mini xs) | xs `atLeastSize` 11  = text "[" <> prettyVs (take 10 (Micro `map` xs)) <> text ", ..]"
+  pretty (Mini xs) | xs `atLeastSize` 1   = text "[" <> prettyVs (take 10 (Micro `map` xs)) <> text "]"
+  pretty (Mini _ )                        = text "[]"
 
-instance Show (Micro a) => Show (Mini (DL.DList a)) where
-  showsPrec _ (Mini xs) = shows (Mini (DL.toList xs))
+instance Pretty (Micro a) => Pretty (Mini (DL.DList a)) where
+  pretty (Mini xs) = pretty (Mini (DL.toList xs))
 
-instance Show (Mini JsonPartialValue) where
-  showsPrec _ mjpv = case mjpv of
-    Mini (JsonPartialString s   ) -> shows s
-    Mini (JsonPartialNumber n   ) -> shows n
-    Mini (JsonPartialObject []  ) -> ("{}" ++)
+instance Pretty (Mini JsonPartialValue) where
+  pretty mjpv = case mjpv of
+    Mini (JsonPartialString s   ) -> dullgreen  (text (show s))
+    Mini (JsonPartialNumber n   ) -> cyan       (text (show n))
+    Mini (JsonPartialObject []  ) -> text "{}"
     Mini (JsonPartialObject kvs ) -> case kvs of
-      (_:_:_:_:_:_:_:_:_:_:_:_:_) -> ("{" ++) . showKvs kvs . (", ..}" ++)
-      []                          -> ("{}" ++)
-      _                           -> ("{" ++) . showKvs kvs . ("}" ++)
-    Mini (JsonPartialArray []   ) -> ("[]" ++)
-    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 11 -> ("[" ++) . showsVs (Micro `map` take 10 vs) . (", ..]"  ++)
-    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 1  -> ("[" ++) . showsVs (Micro `map` take 10 vs) . ("]"      ++)
-    Mini (JsonPartialArray _    )                       -> ("[]"                                                   ++)
-    Mini (JsonPartialBool w     ) -> shows w
-    Mini  JsonPartialNull         -> ("null" ++)
-    Mini (JsonPartialError s    ) -> ("<error " ++) . shows s . (">" ++)
+      (_:_:_:_:_:_:_:_:_:_:_:_:_) -> text "{" <> prettyKvs kvs <> text ", ..}"
+      []                          -> text "{}"
+      _                           -> text "{" <> prettyKvs kvs <> text "}"
+    Mini (JsonPartialArray []   ) -> text "[]"
+    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 11 -> text "[" <> prettyVs (Micro `map` take 10 vs) <> text ", ..]"
+    Mini (JsonPartialArray vs   ) | vs `atLeastSize` 1  -> text "[" <> prettyVs (Micro `map` take 10 vs) <> text "]"
+    Mini (JsonPartialArray _    )                       -> text "[]"
+    Mini (JsonPartialBool w     ) -> red (text (show w))
+    Mini  JsonPartialNull         -> text "null"
+    Mini (JsonPartialError s    ) -> text "<error " <> text s <> text ">"
 
-instance Show (Mini (String, JsonPartialValue)) where
-  showsPrec _ (Mini (fieldName, jpv)) = shows fieldName . (": " ++) . shows (Mini jpv)
+instance Pretty (Mini (String, JsonPartialValue)) where
+  pretty (Mini (fieldName, jpv)) = text fieldName <> text ": " <> pretty (Mini jpv)

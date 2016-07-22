@@ -1,37 +1,48 @@
 {-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 
 module HaskellWorks.Data.Micro where
 
 import qualified Data.DList                           as DL
-import           Data.List
 import           HaskellWorks.Data.Json.PartialValue
+import           Text.PrettyPrint.ANSI.Leijen
 
 newtype Micro a = Micro a
 
-instance Show (Micro JsonPartialValue) where
-  showsPrec _ v = case v of
-    Micro (JsonPartialString s ) -> shows s
-    Micro (JsonPartialNumber n ) -> shows n
-    Micro (JsonPartialObject []) -> ("{}" ++)
-    Micro (JsonPartialObject _ ) -> ("{..}" ++)
-    Micro (JsonPartialArray [] ) -> ("[]" ++)
-    Micro (JsonPartialArray _  ) -> ("[..]" ++)
-    Micro (JsonPartialBool w   ) -> shows w
-    Micro  JsonPartialNull       -> ("null" ++)
-    Micro (JsonPartialError s  ) -> ("<error " ++) . shows s . (">" ++)
+prettyVs :: Pretty a => [a] -> Doc
+prettyVs (kv:kvs) = pretty kv <> foldl (<>) empty ((\jv -> text ", " <> pretty jv) `map` kvs)
+prettyVs []       = empty
 
-instance Show (Micro (String, JsonPartialValue)) where
-  showsPrec _ (Micro (fieldName, jpv)) = shows fieldName . (": " ++) . shows (Micro jpv)
+putPretty :: Pretty a => a -> IO ()
+putPretty = putDoc . pretty
 
-instance Show a => Show (Micro [a]) where
-  show (Micro xs) = case length xs of
-    xsLen | xsLen == 0    -> "[]"
-    xsLen | xsLen <= 50   -> "[" ++ intercalate ", " (show `map` xs) ++ "]"
-    _                     -> "[" ++ intercalate ", " (show `map` take 50 xs) ++ ", ..]"
+prettyKvs :: Pretty (Micro a) => [a] -> Doc
+prettyKvs (kv:kvs) = pretty (Micro kv) <> foldl (<>) empty ((\jv -> text ", " <> pretty (Micro jv)) `map` kvs)
+prettyKvs []       = empty
 
-instance Show a => Show (Micro (DL.DList a)) where
-  showsPrec _ (Micro dxs) = case DL.toList dxs of
-    xs@(_:_:_:_:_:_:_:_:_:_:_:_:_)  -> (("[" ++ intercalate ", " (show `map` take 50 xs) ++ ", ..]") ++)
-    []                              -> ("[]" ++)
-    xs                              -> (("[" ++ intercalate ", " (show `map` xs) ++ "]") ++)
+instance Pretty (Micro JsonPartialValue) where
+  pretty (Micro (JsonPartialString s )) = dullgreen (text (show s))
+  pretty (Micro (JsonPartialNumber n )) = cyan      (text (show n))
+  pretty (Micro (JsonPartialObject [])) = text "{}"
+  pretty (Micro (JsonPartialObject _ )) = text "{..}"
+  pretty (Micro (JsonPartialArray [] )) = text "[]"
+  pretty (Micro (JsonPartialArray _  )) = text "[..]"
+  pretty (Micro (JsonPartialBool w   )) = red (text (show w))
+  pretty (Micro  JsonPartialNull      ) = text "null"
+  pretty (Micro (JsonPartialError s  )) = text "<error " <> text s <> text ">"
+
+instance Pretty (Micro (String, JsonPartialValue)) where
+  pretty (Micro (fieldName, jpv)) = red (text (show fieldName)) <> text ": " <> pretty (Micro jpv)
+
+instance Pretty a => Pretty (Micro [a]) where
+  pretty (Micro xs) = case length xs of
+    xsLen | xsLen == 0    -> text "[]"
+    xsLen | xsLen <= 50   -> text "[" <> prettyVs xs <> text "]"
+    _                     -> text "[" <> prettyVs (take 50 xs) <> text ", ..]"
+
+instance Pretty a => Pretty (Micro (DL.DList a)) where
+  pretty (Micro dxs) = case DL.toList dxs of
+    xs@(_:_:_:_:_:_:_:_:_:_:_:_:_)  -> text "[" <> prettyVs (take 50 xs) <> text ", ..]"
+    []                              -> text "[]"
+    xs                              -> text "[" <> prettyVs          xs  <> text "]"

@@ -10,8 +10,9 @@ import qualified Data.DList                           as DL
 import           GHC.Base
 import           HaskellWorks.Data.AtLeastSize
 import           HaskellWorks.Data.Json.PartialValue
+import           HaskellWorks.Data.Micro
 import           HaskellWorks.Data.Mini
-import           HaskellWorks.Data.Shows
+import           Text.PrettyPrint.ANSI.Leijen
 
 newtype MQuery a = MQuery (DL.DList a)
 
@@ -21,17 +22,17 @@ deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
-instance Show (MQuery JsonPartialValue) where
-  showsPrec _ (MQuery das) = shows (Mini das)
+instance Pretty (MQuery JsonPartialValue) where
+  pretty (MQuery das) = pretty (Mini das)
 
-instance Show (MQuery String) where
-  showsPrec _ (MQuery das) = case DL.toList das of
-    as | as `atLeastSize` 100 -> ("[" ++) . showsVs (take 100 as) . (", ..]" ++)
-    []                        -> ("[]" ++)
-    as                        -> ("[" ++) . showsVs (take 100 as) . ("]" ++)
+instance Pretty (MQuery String) where
+  pretty (MQuery das) = case DL.toList das of
+    as | as `atLeastSize` 100 -> text "[" <> prettyVs (take 100 as) <> text ", ..]"
+    []                        -> text "[]"
+    as                        -> text "[" <> prettyVs (take 100 as) <> text "]"
 
-instance Show (MQuery (String, JsonPartialValue)) where
-  showsPrec _ (MQuery das) = shows (Mini das)
+instance Pretty (MQuery (String, JsonPartialValue)) where
+  pretty (MQuery das) = pretty (Mini das)
 
 expandArray :: JsonPartialValue -> MQuery JsonPartialValue
 expandArray jpv = case jpv of
