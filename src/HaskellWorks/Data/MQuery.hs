@@ -39,6 +39,18 @@ expandArray jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
+dlTake :: Int -> DL.DList a -> DL.DList a
+dlTake n = DL.fromList . take n . DL.toList
+
+limit :: Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+limit n (MQuery xs) = MQuery ((DL.fromList . take n . DL.toList) xs)
+
+skip :: Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+skip n (MQuery xs) = MQuery ((DL.fromList . drop n . DL.toList) xs)
+
+page :: Int -> Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+page size n (MQuery xs) = MQuery ((DL.fromList . take size . drop (size * n) . DL.toList) xs)
+
 expandObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
 expandObject jpv = case jpv of
   JsonPartialObject fs  -> MQuery $ DL.fromList fs
