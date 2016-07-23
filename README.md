@@ -13,19 +13,19 @@ import Data.Function
 ```
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
-putPretty $ q >>= expandArray & limit 10
+putPretty $ q >>= inArray & limit 10
 ```
 
 ```
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
-putPretty $ q >>= expandArray & page 10 1
+putPretty $ q >>= inArray & page 10 1
 ```
 
 ```
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
-putPretty $ q >>= expandArray >>= expandObject
+putPretty $ q >>= inArray >>= inObject
 ```
 
 ```
@@ -34,8 +34,8 @@ let q = MQuery (DL.singleton json)
 :{
 putPretty $ do
     j <- q
-    e <- expandArray j
-    (k, v) <- expandObject e
+    e <- inArray j
+    (k, v) <- inObject e
     return k
 :}
 ```
@@ -46,8 +46,8 @@ let q = MQuery (DL.singleton json)
 :{
 putPretty $ do
     j <- q
-    e <- expandArray j
-    (k, v) <- expandObject e
+    e <- inArray j
+    (k, v) <- inObject e
     guard (k == "name")
     return v
 :}
@@ -56,5 +56,5 @@ putPretty $ do
 ```
 !json <- loadJsonWithIndex "data/78mb.json"
 let q = MQuery (DL.singleton json)
-putPretty $ q >>= expandArray >>= expandObject
+putPretty $ q >>= inArray >>= inObject
 ```

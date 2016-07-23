@@ -32,27 +32,27 @@ instance Pretty (MQuery String) where
     as                        -> text "[" <> prettyVs (take 100 as) <> text "]"
 
 instance Pretty (MQuery (String, JsonPartialValue)) where
-  pretty (MQuery das) = pretty (Mini das)
+  pretty (MQuery das) = pretty (Row das)
 
-expandArray :: JsonPartialValue -> MQuery JsonPartialValue
-expandArray jpv = case jpv of
+inArray :: JsonPartialValue -> MQuery JsonPartialValue
+inArray jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
 dlTake :: Int -> DL.DList a -> DL.DList a
 dlTake n = DL.fromList . take n . DL.toList
 
-limit :: Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+limit :: Int -> MQuery a -> MQuery a
 limit n (MQuery xs) = MQuery ((DL.fromList . take n . DL.toList) xs)
 
-skip :: Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+skip :: Int -> MQuery a -> MQuery a
 skip n (MQuery xs) = MQuery ((DL.fromList . drop n . DL.toList) xs)
 
-page :: Int -> Int -> MQuery JsonPartialValue -> MQuery JsonPartialValue
+page :: Int -> Int -> MQuery a -> MQuery a
 page size n (MQuery xs) = MQuery ((DL.fromList . take size . drop (size * n) . DL.toList) xs)
 
-expandObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
-expandObject jpv = case jpv of
+inObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
+inObject jpv = case jpv of
   JsonPartialObject fs  -> MQuery $ DL.fromList fs
   _                     -> MQuery   DL.empty
 
@@ -67,9 +67,6 @@ jsonKeys jpv = case jpv of
 
 hasKey :: String -> JsonPartialValue -> Bool
 hasKey fieldName jpv = fieldName `elem` jsonKeys jpv
-
-inArray :: MQuery JsonPartialValue -> MQuery JsonPartialValue
-inArray jpvs = jpvs >>= expandArray
 
 jsonSize :: JsonPartialValue -> MQuery JsonPartialValue
 jsonSize jpv = case jpv of

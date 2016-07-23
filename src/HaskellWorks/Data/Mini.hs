@@ -26,7 +26,7 @@ instance Pretty (Mini a) => Pretty (Row (DL.DList a)) where
   pretty (Row xs) = vcat (((bold . yellow) (text "==> ") <>) `map` prettyRows)
     where
       prettyRows :: [Doc]
-      prettyRows = (\row -> text (take 80 (displayS (renderCompact (pretty (Mini row))) []))) `map` DL.toList xs
+      prettyRows = (\row -> text (take 120 (displayS (renderCompact (pretty (Mini row))) []))) `map` DL.toList xs
 
 instance Pretty (Mini JsonPartialValue) where
   pretty mjpv = case mjpv of
@@ -46,4 +46,4 @@ instance Pretty (Mini JsonPartialValue) where
     Mini (JsonPartialError s    ) -> text "<error " <> text s <> text ">"
 
 instance Pretty (Mini (String, JsonPartialValue)) where
-  pretty (Mini (fieldName, jpv)) = text fieldName <> text ": " <> pretty (Mini jpv)
+  pretty (Mini (fieldName, jpv)) = text (show fieldName) <> text ": " <> pretty (Mini jpv)
