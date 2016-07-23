@@ -34,6 +34,10 @@ instance Pretty (MQuery String) where
 instance Pretty (MQuery (String, JsonPartialValue)) where
   pretty (MQuery das) = pretty (Row das)
 
+hasKV :: String -> JsonPartialValue -> JsonPartialValue -> MQuery JsonPartialValue
+hasKV k v (JsonPartialObject xs)  = if (k, v) `elem` xs then MQuery (DL.singleton (JsonPartialObject xs)) else MQuery DL.empty
+hasKV _ _  _                      = MQuery DL.empty
+
 inArray :: JsonPartialValue -> MQuery JsonPartialValue
 inArray jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es

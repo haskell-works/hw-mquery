@@ -14,6 +14,7 @@ import Data.Function
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
 putPretty $ q >>= inArray & limit 10
+putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
 ```
 
 ```
