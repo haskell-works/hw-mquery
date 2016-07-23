@@ -26,7 +26,7 @@ instance Pretty (Mini a) => Pretty (Row (DL.DList a)) where
   pretty (Row xs) = vcat (((bold . yellow) (text "==> ") <>) `map` prettyRows)
     where
       prettyRows :: [Doc]
-      prettyRows = (\row -> text (take 80 (displayS (renderCompact (pretty (Mini row))) []))) `map` (DL.toList xs)
+      prettyRows = (\row -> text (take 80 (displayS (renderCompact (pretty (Mini row))) []))) `map` DL.toList xs
 
 instance Pretty (Mini JsonPartialValue) where
   pretty mjpv = case mjpv of
