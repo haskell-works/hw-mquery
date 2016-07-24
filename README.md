@@ -21,6 +21,19 @@ putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & li
 ```
 !json <- loadJsonPartial "data/78mb.json"
 let q = MQuery (DL.singleton json)
+putPretty $ q >>= inArray & limit 10
+putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
+```
+
+```
+!json <- loadJsonPartial "data/78mb.json"
+let q = MQuery (DL.singleton json)
+putPretty $ q >>= inArray & page 10 1
+```
+
+```
+!json <- loadJsonWithPoppy512Index "data/78mb.json"
+let q = MQuery (DL.singleton json)
 putPretty $ q >>= inArray & page 10 1
 ```
 
