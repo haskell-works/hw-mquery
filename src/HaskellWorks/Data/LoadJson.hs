@@ -59,26 +59,26 @@ loadByteString filepath = do
   let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
   return bs
 
-loadJsonWithIndex :: String -> IO JsonPartialValue
-loadJsonWithIndex filename = do
+loadJsonRawWithIndex :: String -> IO (BS.ByteString, DVS.Vector Word64, DVS.Vector Word64)
+loadJsonRawWithIndex filename = do
   jsonFr    <- mmapFileForeignPtr filename ReadOnly Nothing
   jsonIbFr  <- mmapFileForeignPtr (filename ++ ".ib") ReadOnly Nothing
   jsonBpFr  <- mmapFileForeignPtr (filename ++ ".bp") ReadOnly Nothing
   let jsonBS  = fromForeignRegion jsonFr    :: BS.ByteString
   let jsonIb  = fromForeignRegion jsonIbFr  :: DVS.Vector Word64
   let jsonBp  = fromForeignRegion jsonBpFr  :: DVS.Vector Word64
+  return (jsonBS, jsonIb, jsonBp)
+
+loadJsonWithIndex :: String -> IO JsonPartialValue
+loadJsonWithIndex filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
   let cursor = JsonCursor jsonBS (BitShown jsonIb) (SimpleBalancedParens jsonBp) 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
 loadJsonWithPoppy512Index :: String -> IO JsonPartialValue
 loadJsonWithPoppy512Index filename = do
-  jsonFr    <- mmapFileForeignPtr filename ReadOnly Nothing
-  jsonIbFr  <- mmapFileForeignPtr (filename ++ ".ib") ReadOnly Nothing
-  jsonBpFr  <- mmapFileForeignPtr (filename ++ ".bp") ReadOnly Nothing
-  let jsonBS  = fromForeignRegion jsonFr    :: BS.ByteString
-  let jsonIb  = fromForeignRegion jsonIbFr  :: DVS.Vector Word64
-  let jsonBp  = fromForeignRegion jsonBpFr  :: DVS.Vector Word64
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
   let cursor = JsonCursor jsonBS (makePoppy512 jsonIb) (SimpleBalancedParens jsonBp) 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
