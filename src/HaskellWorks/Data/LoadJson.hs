@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Json.Succinct.Index
 import           HaskellWorks.Data.Json.Succinct.PartialIndex
 import           HaskellWorks.Data.Json.Value
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           HaskellWorks.Diagnostics.Time
 import           System.IO
 import           System.IO.MMap
@@ -67,6 +68,18 @@ loadJsonWithIndex filename = do
   let jsonIb  = fromForeignRegion jsonIbFr  :: DVS.Vector Word64
   let jsonBp  = fromForeignRegion jsonBpFr  :: DVS.Vector Word64
   let cursor = JsonCursor jsonBS (BitShown jsonIb) (SimpleBalancedParens jsonBp) 1
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
+  return jsonResult
+
+loadJsonWithPoppy512Index :: String -> IO JsonPartialValue
+loadJsonWithPoppy512Index filename = do
+  jsonFr    <- mmapFileForeignPtr filename ReadOnly Nothing
+  jsonIbFr  <- mmapFileForeignPtr (filename ++ ".ib") ReadOnly Nothing
+  jsonBpFr  <- mmapFileForeignPtr (filename ++ ".bp") ReadOnly Nothing
+  let jsonBS  = fromForeignRegion jsonFr    :: BS.ByteString
+  let jsonIb  = fromForeignRegion jsonIbFr  :: DVS.Vector Word64
+  let jsonBp  = fromForeignRegion jsonBpFr  :: DVS.Vector Word64
+  let cursor = JsonCursor jsonBS (makePoppy512 jsonIb) (SimpleBalancedParens jsonBp) 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
