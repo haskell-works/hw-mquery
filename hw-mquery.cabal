@@ -22,6 +22,7 @@ library
                       , HaskellWorks.Data.MQuery
                       , HaskellWorks.Data.Row
                       , HaskellWorks.Data.Shows
+                      , HaskellWorks.Data.ToBool
   build-depends:        base                          >= 4          && < 5
                       , array
                       , attoparsec

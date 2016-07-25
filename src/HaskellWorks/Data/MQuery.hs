@@ -12,6 +12,7 @@ import           HaskellWorks.Data.AtLeastSize
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Micro
 import           HaskellWorks.Data.Row
+import           HaskellWorks.Data.ToBool
 import           Text.PrettyPrint.ANSI.Leijen
 
 newtype MQuery a = MQuery (DL.DList a)
@@ -22,8 +23,14 @@ deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
+mQuery :: MQuery a -> DL.DList a
+mQuery (MQuery a) = a
+
+instance ToBool (MQuery a) where
+  toBool = toBool . mQuery
+
 instance Pretty (MQuery JsonPartialValue) where
-  pretty (MQuery das) = pretty (Row 120 das)
+  pretty = pretty . Row 120 . mQuery
 
 instance Pretty (MQuery String) where
   pretty (MQuery das) = case DL.toList das of
@@ -64,13 +71,8 @@ selectField :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
 selectField fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
 selectField _         _                                           = MQuery   DL.empty
 
-hasResults :: MQuery a -> Bool
-hasResults (MQuery das) = case DL.toList das of
-  _:_ -> True
-  _   -> False
-
-select :: a -> (a -> MQuery b) -> MQuery a
-select a p = if hasResults (p a) then MQuery (DL.singleton a) else MQuery DL.empty
+select :: ToBool b => a -> (a -> b) -> MQuery a
+select a f = if toBool (f a) then MQuery (DL.singleton a) else MQuery DL.empty
 
 jsonKeys :: JsonPartialValue -> [String]
 jsonKeys jpv = case jpv of
