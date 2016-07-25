@@ -64,6 +64,14 @@ selectField :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
 selectField fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
 selectField _         _                                           = MQuery   DL.empty
 
+hasResults :: MQuery a -> Bool
+hasResults (MQuery das) = case DL.toList das of
+  _:_ -> True
+  _   -> False
+
+select :: a -> (a -> MQuery b) -> MQuery a
+select a p = if hasResults (p a) then MQuery (DL.singleton a) else MQuery DL.empty
+
 jsonKeys :: JsonPartialValue -> [String]
 jsonKeys jpv = case jpv of
   JsonPartialObject fs  -> fst `map` fs
