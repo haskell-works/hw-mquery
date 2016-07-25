@@ -23,7 +23,7 @@ deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
 
 instance Pretty (MQuery JsonPartialValue) where
-  pretty (MQuery das) = pretty (Row das)
+  pretty (MQuery das) = pretty (Row 120 das)
 
 instance Pretty (MQuery String) where
   pretty (MQuery das) = case DL.toList das of
@@ -32,7 +32,7 @@ instance Pretty (MQuery String) where
     as                        -> text "[" <> prettyVs (take 100 as) <> text "]"
 
 instance Pretty (MQuery (String, JsonPartialValue)) where
-  pretty (MQuery das) = pretty (Row das)
+  pretty (MQuery das) = pretty (Row 120 das)
 
 hasKV :: String -> JsonPartialValue -> JsonPartialValue -> MQuery JsonPartialValue
 hasKV k v (JsonPartialObject xs)  = if (k, v) `elem` xs then MQuery (DL.singleton (JsonPartialObject xs)) else MQuery DL.empty
