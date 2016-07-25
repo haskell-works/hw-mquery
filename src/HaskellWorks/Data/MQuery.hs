@@ -50,6 +50,15 @@ inArray jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
+inObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
+inObject jpv = case jpv of
+  JsonPartialObject fs  -> MQuery $ DL.fromList fs
+  _                     -> MQuery   DL.empty
+
+inField :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
+inField fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
+inField _         _                                           = MQuery   DL.empty
+
 dlTake :: Int -> DL.DList a -> DL.DList a
 dlTake n = DL.fromList . take n . DL.toList
 
@@ -61,15 +70,6 @@ skip n (MQuery xs) = MQuery ((DL.fromList . drop n . DL.toList) xs)
 
 page :: Int -> Int -> MQuery a -> MQuery a
 page size n (MQuery xs) = MQuery ((DL.fromList . take size . drop (size * n) . DL.toList) xs)
-
-inObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
-inObject jpv = case jpv of
-  JsonPartialObject fs  -> MQuery $ DL.fromList fs
-  _                     -> MQuery   DL.empty
-
-selectField :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
-selectField fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
-selectField _         _                                           = MQuery   DL.empty
 
 select :: ToBool b => a -> (a -> b) -> MQuery a
 select a f = if toBool (f a) then MQuery (DL.singleton a) else MQuery DL.empty

@@ -2,14 +2,15 @@
 [![0.0-branch](https://circleci.com/gh/haskell-works/hw-mquery/tree/0.0-branch.svg?style=svg)](https://circleci.com/gh/haskell-works/hw-mquery/tree/0.0-branch)
 
 ```
-import HaskellWorks.Data.LoadJson
-import HaskellWorks.Data.Micro
-import HaskellWorks.Data.MQuery
-import HaskellWorks.Data.Json.PartialValue
-import HaskellWorks.Data.Row
-import Text.PrettyPrint.ANSI.Leijen
+import           Control.Monad
 import qualified Data.DList as DL
-import Data.Function
+import           Data.Function
+import           HaskellWorks.Data.LoadJson
+import           HaskellWorks.Data.Micro
+import           HaskellWorks.Data.MQuery
+import           HaskellWorks.Data.Json.PartialValue
+import           HaskellWorks.Data.Row
+import           Text.PrettyPrint.ANSI.Leijen
 ```
 
 ```
@@ -17,6 +18,7 @@ import Data.Function
 let q = MQuery (DL.singleton json)
 putPretty $ q >>= inArray & limit 10
 putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
+putPretty $ q >>= inArray >>= inField "name" & limit 10
 ```
 
 ```
