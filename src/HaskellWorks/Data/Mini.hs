@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
 
 module HaskellWorks.Data.Mini where
 
@@ -12,8 +11,6 @@ import           Text.PrettyPrint.ANSI.Leijen
 
 newtype Mini a = Mini a
 
-newtype Row a = Row a
-
 instance Pretty (Micro a) => Pretty (Mini [a]) where
   pretty (Mini xs) | xs `atLeastSize` 11  = text "[" <> nest 2 (prettyVs (take 10 (Micro `map` xs))) <> text ", ..]"
   pretty (Mini xs) | xs `atLeastSize` 1   = text "[" <> nest 2 (prettyVs (take 10 (Micro `map` xs))) <> text "]"
@@ -21,12 +18,6 @@ instance Pretty (Micro a) => Pretty (Mini [a]) where
 
 instance Pretty (Mini a) => Pretty (Mini (DL.DList a)) where
   pretty (Mini xs) = vcat (punctuate (text ",") ((pretty . Mini) `map` take 10 (DL.toList xs)))
-
-instance Pretty (Mini a) => Pretty (Row (DL.DList a)) where
-  pretty (Row xs) = vcat (((bold . yellow) (text "==> ") <>) `map` prettyRows)
-    where
-      prettyRows :: [Doc]
-      prettyRows = (\row -> text (take 120 (displayS (renderCompact (pretty (Mini row))) []))) `map` DL.toList xs
 
 instance Pretty (Mini JsonPartialValue) where
   pretty mjpv = case mjpv of

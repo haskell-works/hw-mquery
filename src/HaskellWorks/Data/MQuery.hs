@@ -11,7 +11,7 @@ import           GHC.Base
 import           HaskellWorks.Data.AtLeastSize
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Micro
-import           HaskellWorks.Data.Mini
+import           HaskellWorks.Data.Row
 import           Text.PrettyPrint.ANSI.Leijen
 
 newtype MQuery a = MQuery (DL.DList a)

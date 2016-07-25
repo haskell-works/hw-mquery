@@ -6,6 +6,7 @@ import HaskellWorks.Data.LoadJson
 import HaskellWorks.Data.Micro
 import HaskellWorks.Data.MQuery
 import HaskellWorks.Data.Json.PartialValue
+import HaskellWorks.Data.Row
 import Text.PrettyPrint.ANSI.Leijen
 import qualified Data.DList as DL
 import Data.Function
