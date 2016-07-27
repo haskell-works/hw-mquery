@@ -55,8 +55,11 @@ named :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
 named fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
 named _         _                                           = MQuery   DL.empty
 
-key :: (String, JsonPartialValue) -> MQuery String
+key :: (k, v) -> MQuery k
 key (k, _) = MQuery $ DL.singleton k
+
+value :: (k, v) -> MQuery v
+value (_, v) = MQuery $ DL.singleton v
 
 dlTake :: Int -> DL.DList a -> DL.DList a
 dlTake n = DL.fromList . take n . DL.toList
