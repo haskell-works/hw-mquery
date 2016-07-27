@@ -46,14 +46,14 @@ item jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
-object :: JsonPartialValue -> MQuery (String, JsonPartialValue)
-object jpv = case jpv of
+entry :: JsonPartialValue -> MQuery (String, JsonPartialValue)
+entry jpv = case jpv of
   JsonPartialObject fs  -> MQuery $ DL.fromList fs
   _                     -> MQuery   DL.empty
 
-field :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
-field fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
-field _         _                                           = MQuery   DL.empty
+named :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
+named fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
+named _         _                                           = MQuery   DL.empty
 
 inKey :: (String, JsonPartialValue) -> MQuery String
 inKey (key, _) = MQuery $ DL.singleton key
