@@ -22,13 +22,14 @@ let q = MQuery (DL.singleton json)
 ```
 
 ```
-putPretty $ q >>= inArray & limit 10
-putPretty $ q >>= inArray & page 10 1
-putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
-putPretty $ q >>= inArray >>= inObject
-putPretty $ q >>= inArray >>= inObject >>= inField "name" & limit 10
-putPretty $ q >>= inArray >>= inObject >>= inKey & limit 100 & onList (uniq . sort)
-putPretty $ (q >>= inArray >>= inObject & limit 1) >>= inField "name" & limit 10
-putPretty $ do {j <- q; e <- inArray j; (k, v) <- inObject e; return k}
-putPretty $ do {j <- q; e <- inArray j; (k, v) <- inObject e; guard (k == "name"); return v}
+putPretty $ q >>= item & limit 10
+putPretty $ q >>= item & page 10 1
+putPretty $ q >>= item >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
+putPretty $ q >>= item >>= object
+putPretty $ q >>= item >>= object >>= field "name" & limit 10
+putPretty $ q >>= (item >=> object >=> inKey) & limit 10
+putPretty $ q >>= item >>= object >>= inKey & limit 100 & onList (uniq . sort)
+putPretty $ (q >>= item >>= object & limit 1) >>= field "name" & limit 10
+putPretty $ do {j <- q; e <- item j; (k, v) <- object e; return k}
+putPretty $ do {j <- q; e <- item j; (k, v) <- object e; guard (k == "name"); return v}
 ```

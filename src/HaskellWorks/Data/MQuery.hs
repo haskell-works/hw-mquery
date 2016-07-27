@@ -41,19 +41,19 @@ hasKV :: String -> JsonPartialValue -> JsonPartialValue -> MQuery JsonPartialVal
 hasKV k v (JsonPartialObject xs)  = if (k, v) `elem` xs then MQuery (DL.singleton (JsonPartialObject xs)) else MQuery DL.empty
 hasKV _ _  _                      = MQuery DL.empty
 
-inArray :: JsonPartialValue -> MQuery JsonPartialValue
-inArray jpv = case jpv of
+item :: JsonPartialValue -> MQuery JsonPartialValue
+item jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
-inObject :: JsonPartialValue -> MQuery (String, JsonPartialValue)
-inObject jpv = case jpv of
+object :: JsonPartialValue -> MQuery (String, JsonPartialValue)
+object jpv = case jpv of
   JsonPartialObject fs  -> MQuery $ DL.fromList fs
   _                     -> MQuery   DL.empty
 
-inField :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
-inField fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
-inField _         _                                           = MQuery   DL.empty
+field :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
+field fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
+field _         _                                           = MQuery   DL.empty
 
 inKey :: (String, JsonPartialValue) -> MQuery String
 inKey (key, _) = MQuery $ DL.singleton key
