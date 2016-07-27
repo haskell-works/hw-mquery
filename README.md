@@ -28,6 +28,7 @@ putPretty $ q >>= inArray >>= hasKV "founded_year" (JsonPartialNumber 2005) & li
 putPretty $ q >>= inArray >>= inObject
 putPretty $ q >>= inArray >>= inObject >>= inField "name" & limit 10
 putPretty $ q >>= inArray >>= inObject >>= inKey & limit 100 & onList (uniq . sort)
+putPretty $ (q >>= inArray >>= inObject & limit 1) >>= inField "name" & limit 10
 putPretty $ do {j <- q; e <- inArray j; (k, v) <- inObject e; return k}
 putPretty $ do {j <- q; e <- inArray j; (k, v) <- inObject e; guard (k == "name"); return v}
 ```
