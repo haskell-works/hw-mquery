@@ -27,8 +27,8 @@ putPretty $ q >>= item & page 10 1
 putPretty $ q >>= item >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit 10
 putPretty $ q >>= item >>= entry
 putPretty $ q >>= item >>= entry >>= named "name" & limit 10
-putPretty $ q >>= (item >=> entry >=> inKey) & limit 10
-putPretty $ q >>= item >>= entry >>= inKey & limit 100 & onList (uniq . sort)
+putPretty $ q >>= (item >=> entry >=> key) & limit 10
+putPretty $ q >>= item >>= entry >>= key & limit 100 & onList (uniq . sort)
 putPretty $ (q >>= item >>= entry & limit 1) >>= field "name" & limit 10
 putPretty $ do {j <- q; e <- item j; (k, v) <- entry e; return k}
 putPretty $ do {j <- q; e <- item j; (k, v) <- entry e; guard (k == "name"); return v}
