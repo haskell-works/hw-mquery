@@ -28,6 +28,7 @@ putPretty $ q >>= item >>= hasKV "founded_year" (JsonPartialNumber 2005) & limit
 putPretty $ q >>= item >>= entry
 putPretty $ q >>= item >>= entry >>= named "name" & limit 10
 putPretty $ q >>= item >>= entry >>= satisfying (\(k, _) -> k == "name") >>= value & limit 10
+putPretty $ q >>= item >>= entry >>= satisfying ((== "name") . fst) >>= value & limit 10
 putPretty $ q >>= (item >=> entry >=> key) & limit 10
 putPretty $ q >>= item >>= entry >>= key & limit 100 & onList (uniq . sort)
 putPretty $ (q >>= item >>= entry & limit 1) >>= field "name" & limit 10
