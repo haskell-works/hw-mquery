@@ -70,7 +70,13 @@ asInteger jpv = case jpv of
   JsonPartialNumber n -> MQuery $ DL.singleton (floor n)
   _                   -> MQuery   DL.empty
 
-named :: String -> (Entry String JsonPartialValue) -> MQuery JsonPartialValue
+castAsInteger :: JsonPartialValue -> MQuery Integer
+castAsInteger jpv = case jpv of
+  JsonPartialString n -> MQuery $ DL.singleton (read n)
+  JsonPartialNumber n -> MQuery $ DL.singleton (floor n)
+  _                   -> MQuery   DL.empty
+
+named :: String -> Entry String JsonPartialValue -> MQuery JsonPartialValue
 named fieldName (Entry fieldName' jpv) | fieldName == fieldName'  = MQuery $ DL.singleton jpv
 named _         _                                                 = MQuery   DL.empty
 
