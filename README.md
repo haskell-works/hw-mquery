@@ -35,3 +35,7 @@ putPretty $ (q >>= item >>= entry & limit 1) >>= field "name" & limit 10
 putPretty $ do {j <- q; e <- item j; (k, v) <- entry e; return k}
 putPretty $ do {j <- q; e <- item j; (k, v) <- entry e; guard (k == "name"); return v}
 ```
+
+### Decoding
+#### Line separated base 64 encoded gzipped json
+while read in; do echo "$in" | base64 --decode | gunzip; echo ""; done < file.lgz > firehose.json
