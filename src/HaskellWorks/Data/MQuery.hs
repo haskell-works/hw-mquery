@@ -2,6 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE StandaloneDeriving         #-}
+{-# LANGUAGE TypeFamilies               #-}
 
 module HaskellWorks.Data.MQuery where
 
@@ -21,6 +22,10 @@ deriving instance Applicative MQuery
 deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
+
+class IsPredicate a where
+  type ArgOf a
+  toPredicate :: ArgOf a -> (a -> Bool)
 
 mQuery :: MQuery a -> DL.DList a
 mQuery (MQuery a) = a
@@ -54,6 +59,10 @@ entry jpv = case jpv of
 named :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
 named fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
 named _         _                                           = MQuery   DL.empty
+
+satisfying :: (a -> Bool) -> a -> MQuery a
+satisfying p a | p a  = MQuery $ DL.singleton a
+satisfying _ _        = MQuery   DL.empty
 
 key :: (k, v) -> MQuery k
 key (k, _) = MQuery $ DL.singleton k
