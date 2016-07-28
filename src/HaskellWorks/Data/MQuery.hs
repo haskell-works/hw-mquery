@@ -10,6 +10,7 @@ import           Control.Monad
 import           Data.List
 import qualified Data.DList                           as DL
 import           GHC.Base
+import           HaskellWorks.Data.Entry
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Row
 import           HaskellWorks.Data.ToBool
@@ -39,7 +40,7 @@ instance Pretty (MQuery JsonPartialValue) where
 instance Pretty (MQuery String) where
   pretty x = prettyRowOfString (Row 120 (mQuery x))
 
-instance Pretty (MQuery (String, JsonPartialValue)) where
+instance Pretty (MQuery (Entry String JsonPartialValue)) where
   pretty (MQuery das) = pretty (Row 120 das)
 
 hasKV :: String -> JsonPartialValue -> JsonPartialValue -> MQuery JsonPartialValue
@@ -51,14 +52,14 @@ item jpv = case jpv of
   JsonPartialArray es -> MQuery $ DL.fromList es
   _                   -> MQuery   DL.empty
 
-entry :: JsonPartialValue -> MQuery (String, JsonPartialValue)
+entry :: JsonPartialValue -> MQuery (Entry String JsonPartialValue)
 entry jpv = case jpv of
-  JsonPartialObject fs  -> MQuery $ DL.fromList fs
+  JsonPartialObject fs  -> MQuery $ DL.fromList (uncurry Entry `map` fs)
   _                     -> MQuery   DL.empty
 
-named :: String -> (String, JsonPartialValue) -> MQuery JsonPartialValue
-named fieldName (fieldName', jpv) | fieldName == fieldName' = MQuery $ DL.singleton jpv
-named _         _                                           = MQuery   DL.empty
+named :: String -> (Entry String JsonPartialValue) -> MQuery JsonPartialValue
+named fieldName (Entry fieldName' jpv) | fieldName == fieldName'  = MQuery $ DL.singleton jpv
+named _         _                                                 = MQuery   DL.empty
 
 satisfying :: (a -> Bool) -> a -> MQuery a
 satisfying p a | p a  = MQuery $ DL.singleton a

@@ -16,6 +16,7 @@ cabal-version:          >= 1.22
 library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.AtLeastSize
+                      , HaskellWorks.Data.Entry
                       , HaskellWorks.Data.LoadJson
                       , HaskellWorks.Data.Micro
                       , HaskellWorks.Data.Mini
