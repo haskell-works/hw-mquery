@@ -40,6 +40,9 @@ instance Pretty (MQuery JsonPartialValue) where
 instance Pretty (MQuery String) where
   pretty x = prettyRowOfString (Row 120 (mQuery x))
 
+instance Pretty (MQuery Integer) where
+  pretty x = prettyRowOfString (Row 120 (mQuery x))
+
 instance Pretty (MQuery (Entry String JsonPartialValue)) where
   pretty (MQuery das) = pretty (Row 120 das)
 
@@ -57,6 +60,16 @@ entry jpv = case jpv of
   JsonPartialObject fs  -> MQuery $ DL.fromList (uncurry Entry `map` fs)
   _                     -> MQuery   DL.empty
 
+asString :: JsonPartialValue -> MQuery String
+asString jpv = case jpv of
+  JsonPartialString s -> MQuery $ DL.singleton s
+  _                   -> MQuery   DL.empty
+
+asInteger :: JsonPartialValue -> MQuery Integer
+asInteger jpv = case jpv of
+  JsonPartialNumber n -> MQuery $ DL.singleton (floor n)
+  _                   -> MQuery   DL.empty
+
 named :: String -> (Entry String JsonPartialValue) -> MQuery JsonPartialValue
 named fieldName (Entry fieldName' jpv) | fieldName == fieldName'  = MQuery $ DL.singleton jpv
 named _         _                                                 = MQuery   DL.empty
@@ -65,11 +78,11 @@ satisfying :: (a -> Bool) -> a -> MQuery a
 satisfying p a | p a  = MQuery $ DL.singleton a
 satisfying _ _        = MQuery   DL.empty
 
-key :: (k, v) -> MQuery k
-key (k, _) = MQuery $ DL.singleton k
+key :: Entry k v -> MQuery k
+key (Entry k _) = MQuery $ DL.singleton k
 
-value :: (k, v) -> MQuery v
-value (_, v) = MQuery $ DL.singleton v
+value :: Entry k v -> MQuery v
+value (Entry _ v) = MQuery $ DL.singleton v
 
 dlTake :: Int -> DL.DList a -> DL.DList a
 dlTake n = DL.fromList . take n . DL.toList
@@ -91,6 +104,15 @@ jsonSize jpv = case jpv of
   JsonPartialObject es  -> MQuery (DL.singleton (JsonPartialNumber (fromIntegral (length es))))
   _                     -> MQuery (DL.singleton (JsonPartialNumber 0))
 
+having :: (a -> MQuery b) -> a -> MQuery a
+having p a = case p a of
+  MQuery das -> case DL.toList das of
+    _:_ -> MQuery (DL.singleton a)
+    _   -> MQuery  DL.empty
+
+valueOf :: Eq a => a -> a -> MQuery a
+valueOf a b = if a == b then MQuery (DL.singleton b) else MQuery DL.empty
+
 limit :: Int -> MQuery a -> MQuery a
 limit n (MQuery xs) = MQuery ((DL.fromList . take n . DL.toList) xs)
 
@@ -105,6 +127,9 @@ sorted (MQuery xs) = MQuery ((DL.fromList . sort . DL.toList) xs)
 
 onList :: Ord a => ([a] -> [a]) -> MQuery a -> MQuery a
 onList f (MQuery xs) = MQuery ((DL.fromList . f . DL.toList) xs)
+
+aggregate :: Ord a => ([a] -> b) -> MQuery a -> MQuery b
+aggregate f (MQuery xs) = MQuery (DL.fromList [f (DL.toList xs)])
 
 uniq :: Eq a => [a] -> [a]
 uniq (a:b:cs) | a == b  =   uniq (b:cs)
