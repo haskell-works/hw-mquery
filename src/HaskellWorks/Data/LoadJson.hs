@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Json.Succinct.Index
 import           HaskellWorks.Data.Json.Succinct.PartialIndex
 import           HaskellWorks.Data.Json.Value
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.CsPoppy
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           HaskellWorks.Diagnostics.Time
 import           System.IO
@@ -80,6 +81,13 @@ loadJsonWithPoppy512Index :: String -> IO JsonPartialValue
 loadJsonWithPoppy512Index filename = do
   (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
   let cursor = JsonCursor jsonBS (makePoppy512 jsonIb) (SimpleBalancedParens jsonBp) 1
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
+  return jsonResult
+
+loadJsonWithCsPoppyIndex :: String -> IO JsonPartialValue
+loadJsonWithCsPoppyIndex filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
+  let cursor = JsonCursor jsonBS (makeCsPoppy jsonIb) (SimpleBalancedParens jsonBp) 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
