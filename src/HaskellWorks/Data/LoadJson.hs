@@ -24,6 +24,7 @@ import           HaskellWorks.Data.Json.Value
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.CsPoppy
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512S
 import           HaskellWorks.Diagnostics.Time
 import           System.IO
 import           System.IO.MMap
@@ -84,10 +85,25 @@ loadJsonWithPoppy512Index filename = do
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
+loadJsonWithPoppy512SIndex :: String -> IO JsonPartialValue
+loadJsonWithPoppy512SIndex filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
+  let cursor = JsonCursor jsonBS (makePoppy512S jsonIb) (SimpleBalancedParens jsonBp) 1
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
+  return jsonResult
+
 loadJsonWithCsPoppyIndex :: String -> IO JsonPartialValue
 loadJsonWithCsPoppyIndex filename = do
   (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
   let cursor = JsonCursor jsonBS (makeCsPoppy jsonIb) (SimpleBalancedParens jsonBp) 1
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
+  return jsonResult
+
+loadJsonWithPoppy512Index2 :: String -> IO JsonPartialValue
+loadJsonWithPoppy512Index2 filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
+  let cursor = JsonCursor jsonBS (makePoppy512 jsonIb) (SimpleBalancedParens (makePoppy512 jsonBp)) 1
+                :: JsonCursor BSI.ByteString Poppy512 (SimpleBalancedParens Poppy512)
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 

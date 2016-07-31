@@ -131,10 +131,10 @@ page size n (MQuery xs) = MQuery ((DL.fromList . take size . drop (size * n) . D
 sorted :: Ord a => MQuery a -> MQuery a
 sorted (MQuery xs) = MQuery ((DL.fromList . sort . DL.toList) xs)
 
-onList :: Ord a => ([a] -> [a]) -> MQuery a -> MQuery a
+onList :: ([a] -> [a]) -> MQuery a -> MQuery a
 onList f (MQuery xs) = MQuery ((DL.fromList . f . DL.toList) xs)
 
-aggregate :: Ord a => ([a] -> b) -> MQuery a -> MQuery b
+aggregate :: ([a] -> b) -> MQuery a -> MQuery b
 aggregate f (MQuery xs) = MQuery (DL.fromList [f (DL.toList xs)])
 
 uniq :: Eq a => [a] -> [a]
