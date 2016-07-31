@@ -45,3 +45,15 @@ while read in; do echo "$in" | base64 --decode | gunzip; echo ""; done < file.lg
 mafia build -p
 cabal repl --ghc-options='-fexternal-interpreter -prof'
 ```
+
+```
+import HaskellWorks.Data.Succinct.BalancedParens
+import HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
+import HaskellWorks.Data.Positioning
+import qualified Data.Vector.Storable as DVS
+import HaskellWorks.Data.Vector.VectorLike
+(jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex "firehose.json"
+let bp1 = SimpleBalancedParens jsonBp
+let bp2 = SimpleBalancedParens (makePoppy512 jsonBp)
+let bp3 = makePoppy512 jsonBp
+```
