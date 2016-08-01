@@ -107,6 +107,14 @@ loadJsonWithPoppy512Index2 filename = do
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
+loadJsonWithPoppy512SIndex2 :: String -> IO JsonPartialValue
+loadJsonWithPoppy512SIndex2 filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
+  let cursor = JsonCursor jsonBS (makePoppy512S jsonIb) (SimpleBalancedParens (makePoppy512S jsonBp)) 1
+                :: JsonCursor BSI.ByteString Poppy512S (SimpleBalancedParens Poppy512S)
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
+  return jsonResult
+
 indexJson :: String -> IO ()
 indexJson filename = do
   JsonCursor _ (BitShown ib) (SimpleBalancedParens bp) _ <- readJson filename

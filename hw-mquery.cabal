@@ -34,7 +34,7 @@ executable hw-mquery-example
                       , hw-mquery
                       , hw-parser
                       , hw-prim                       >= 0.0.3.3
-                      , hw-rankselect                 >= 0.0.0.5
+                      , hw-rankselect                 >= 0.0.0.6
                       , mmap
                       , mono-traversable
                       , pretty
@@ -96,7 +96,7 @@ test-suite hw-mquery-test
                       , hw-conduit
                       , hw-mquery
                       , hw-prim                       >= 0.0.3.1
-                      , hw-rankselect                 >= 0.0.0.5
+                      , hw-rankselect                 >= 0.1.0.0
                       , mmap
                       , parsec
                       , QuickCheck
