@@ -96,7 +96,7 @@ loadJsonWithPoppy512SIndex filename = do
 loadJsonWithPoppy512SMinMaxIndex :: String -> IO JsonPartialValue
 loadJsonWithPoppy512SMinMaxIndex filename = do
   (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
-  let cursor = JsonCursor jsonBS (makePoppy512S jsonIb) (mkRangeMinMaxL0 jsonBp) 1
+  let cursor = JsonCursor jsonBS (makePoppy512S jsonIb) (mkRangeMinMax jsonBp) 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
 
