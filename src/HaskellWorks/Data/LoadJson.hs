@@ -21,9 +21,6 @@ import           HaskellWorks.Data.Json.Succinct.Cursor
 import           HaskellWorks.Data.Json.Succinct.Index
 import           HaskellWorks.Data.Json.Succinct.PartialIndex
 import           HaskellWorks.Data.Json.Value
-import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax.L0
-import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax.L1
-import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax.L2
 import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax.L3
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.CsPoppy
@@ -99,35 +96,7 @@ loadJsonWithPoppy512SIndex filename = do
 loadJsonWithPoppy512SMinMaxIndex :: String -> IO JsonPartialValue
 loadJsonWithPoppy512SMinMaxIndex filename = do
   (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
-  let rangeMinMax = mkRangeMinMaxL3 jsonBp
-  let !a  = rangeMinMaxL3Base    rangeMinMax
-  let !a1 = rangeMinMaxL3Min     rangeMinMax
-  let !a2 = rangeMinMaxL3Max     rangeMinMax
-  let !a3 = rangeMinMaxL3Excess  rangeMinMax
-  let !b  = rangeMinMaxL2Base    a
-  let !b1 = rangeMinMaxL2Min     a
-  let !b2 = rangeMinMaxL2Max     a
-  let !b3 = rangeMinMaxL2Excess  a
-  let !c  = rangeMinMaxL1Base    b
-  let !c1 = rangeMinMaxL1Min     b
-  let !c2 = rangeMinMaxL1Max     b
-  let !c3 = rangeMinMaxL1Excess  b
-  let !_  = rangeMinMaxSimple    c
-  let !d1 = rangeMinMaxL0Min     c
-  let !d2 = rangeMinMaxL0Max     c
-  let !d3 = rangeMinMaxL0Excess  c
-  let !_  = a1 DVS.! 0
-  let !_  = a2 DVS.! 0
-  let !_  = a3 DVS.! 0
-  let !_  = b1 DVS.! 0
-  let !_  = b2 DVS.! 0
-  let !_  = b3 DVS.! 0
-  let !_  = c1 DVS.! 0
-  let !_  = c2 DVS.! 0
-  let !_  = c3 DVS.! 0
-  let !_  = d1 DVS.! 0
-  let !_  = d2 DVS.! 0
-  let !_  = d3 DVS.! 0
+  let !rangeMinMax = mkRangeMinMaxL3 jsonBp
   let cursor = JsonCursor jsonBS (makePoppy512S jsonIb) rangeMinMax 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursor)
   return jsonResult
