@@ -11,6 +11,7 @@ import           HaskellWorks.Data.Micro
 import           HaskellWorks.Data.MQuery
 import           HaskellWorks.Data.Json.PartialValue
 import           HaskellWorks.Data.Row
+import           HaskellWorks.Diagnostics
 import           Text.PrettyPrint.ANSI.Leijen
 ```
 
