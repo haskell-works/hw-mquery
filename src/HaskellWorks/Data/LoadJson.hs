@@ -21,7 +21,7 @@ import           HaskellWorks.Data.Json.Succinct.Cursor
 import           HaskellWorks.Data.Json.Succinct.Index
 import           HaskellWorks.Data.Json.Succinct.PartialIndex
 import           HaskellWorks.Data.Json.Value
-import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax.L3
+import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.CsPoppy
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
