@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Json.Succinct.Index
 import           HaskellWorks.Data.Json.Succinct.PartialIndex
 import           HaskellWorks.Data.Json.Value
 import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax
+import           HaskellWorks.Data.Succinct.BalancedParens.RangeMinMax2
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.CsPoppy
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
@@ -113,6 +114,14 @@ loadJsonWithPoppy512SMinMaxL3Index :: String -> IO JsonPartialValue
 loadJsonWithPoppy512SMinMaxL3Index filename = do
   (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
   let !rangeMinMax = mkRangeMinMaxL3 jsonBp
+  let cursorRmm2 = JsonCursor jsonBS (makePoppy512S jsonIb) rangeMinMax 1
+  let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursorRmm2)
+  return jsonResult
+
+loadJsonWithPoppy512SMinMax2Index :: String -> IO JsonPartialValue
+loadJsonWithPoppy512SMinMax2Index filename = do
+  (jsonBS, jsonIb, jsonBp) <- loadJsonRawWithIndex filename
+  let !rangeMinMax = mkRangeMinMax2 jsonBp
   let cursorL3 = JsonCursor jsonBS (makePoppy512S jsonIb) rangeMinMax 1
   let !jsonResult = jsonPartialJsonValueAt (jsonPartialIndexAt cursorL3)
   return jsonResult
