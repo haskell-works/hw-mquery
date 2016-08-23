@@ -43,6 +43,9 @@ instance Pretty (MQuery String) where
 instance Pretty (MQuery Integer) where
   pretty x = prettyRowOfString (Row 120 (mQuery x))
 
+instance Pretty (MQuery Int) where
+  pretty x = prettyRowOfString (Row 120 (mQuery x))
+
 instance Pretty (MQuery (Entry String JsonPartialValue)) where
   pretty (MQuery das) = pretty (Row 120 das)
 
