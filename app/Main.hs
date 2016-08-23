@@ -12,7 +12,7 @@ import           HaskellWorks.Data.MQuery
 
 main :: IO ()
 main = do
-  !json <- loadJsonWithPoppy512SMinMaxL3Index "firehose.json"
+  !json <- loadJsonWithPoppy512SMinMaxIndex "firehose.json"
   let q = MQuery (DL.singleton json)
   putPretty $ q >>= (
     item  >=> entry >=> named "attack"
