@@ -46,7 +46,6 @@ library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.AtLeastSize
                       , HaskellWorks.Data.Entry
-                      , HaskellWorks.Data.LoadJson
                       , HaskellWorks.Data.Micro
                       , HaskellWorks.Data.Mini
                       , HaskellWorks.Data.MQuery
@@ -65,7 +64,6 @@ library
                       , hw-bits
                       , hw-conduit
                       , hw-diagnostics
-                      , hw-json
                       , hw-parser
                       , hw-prim                       >= 0.0.3.3
                       , hw-rankselect                 >= 0.1.0.1
