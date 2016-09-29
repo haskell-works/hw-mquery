@@ -82,6 +82,9 @@ sorted (MQuery xs) = MQuery ((DL.fromList . sort . DL.toList) xs)
 onList :: ([a] -> [a]) -> MQuery a -> MQuery a
 onList f (MQuery xs) = MQuery ((DL.fromList . f . DL.toList) xs)
 
+count :: MQuery a -> MQuery Int
+count (MQuery xs) = MQuery (DL.singleton (length (DL.toList xs)))
+
 aggregate :: ([a] -> b) -> MQuery a -> MQuery b
 aggregate f (MQuery xs) = MQuery (DL.fromList [f (DL.toList xs)])
 

@@ -1,9 +1,9 @@
 name:                   hw-mquery
-version:                0.1.0.0
+version:                0.1.0.1
 synopsis:               Conduits for tokenizing streams.
 description:            Please see README.md
 homepage:               http://github.com/haskell-works/hw-mquery#readme
-license:                BSD3
+license:                MIT
 license-file:           LICENSE
 author:                 John Ky
 maintainer:             newhoggy@gmail.com
