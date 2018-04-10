@@ -1,6 +1,6 @@
 module HaskellWorks.Data.Entry where
 
-import           Text.PrettyPrint.ANSI.Leijen
+import Text.PrettyPrint.ANSI.Leijen
 
 data Entry k v = Entry k v
 

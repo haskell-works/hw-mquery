@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module HaskellWorks.Data.Shows where
 

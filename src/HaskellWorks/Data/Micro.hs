@@ -1,11 +1,12 @@
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE FlexibleInstances   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module HaskellWorks.Data.Micro where
 
-import qualified Data.DList                           as DL
-import           Text.PrettyPrint.ANSI.Leijen
+import Text.PrettyPrint.ANSI.Leijen
+
+import qualified Data.DList as DL
 
 newtype Micro a = Micro a
 
@@ -24,10 +25,10 @@ instance Pretty a => Pretty (Micro [a]) where
   pretty (Micro xs) = case length xs of
     xsLen | xsLen == 0    -> text "[]"
     xsLen | xsLen <= 10   -> text "[" <> prettyVs xs <> text "]"
-    _                     -> text "[" <> prettyVs (take 10 xs) <> text ", ..]"
+    _     -> text "[" <> prettyVs (take 10 xs) <> text ", ..]"
 
 instance Pretty a => Pretty (Micro (DL.DList a)) where
   pretty (Micro dxs) = case DL.toList dxs of
-    xs@(_:_:_:_:_:_:_:_:_:_:_:_:_)  -> text "[" <> prettyVs (take 50 xs) <> text ", ..]"
-    []                              -> text "[]"
-    xs                              -> text "[" <> prettyVs          xs  <> text "]"
+    xs@(_:_:_:_:_:_:_:_:_:_:_:_:_) -> text "[" <> prettyVs (take 50 xs) <> text ", ..]"
+    []                             -> text "[]"
+    xs                             -> text "[" <> prettyVs          xs  <> text "]"

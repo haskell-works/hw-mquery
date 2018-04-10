@@ -6,14 +6,15 @@
 
 module HaskellWorks.Data.MQuery where
 
-import           Control.Monad
-import           Data.List
-import qualified Data.DList                           as DL
-import           GHC.Base
-import           HaskellWorks.Data.Entry
-import           HaskellWorks.Data.Row
-import           HaskellWorks.Data.ToBool
-import           Text.PrettyPrint.ANSI.Leijen
+import Control.Monad
+import Data.List
+import GHC.Base
+import HaskellWorks.Data.Entry
+import HaskellWorks.Data.Row
+import HaskellWorks.Data.ToBool
+import Text.PrettyPrint.ANSI.Leijen
+
+import qualified Data.DList as DL
 
 newtype MQuery a = MQuery (DL.DList a)
 
@@ -44,7 +45,7 @@ instance Pretty (MQuery Int) where
 
 satisfying :: (a -> Bool) -> a -> MQuery a
 satisfying p a | p a  = MQuery $ DL.singleton a
-satisfying _ _        = MQuery   DL.empty
+satisfying _ _ = MQuery   DL.empty
 
 key :: Entry k v -> MQuery k
 key (Entry k _) = MQuery $ DL.singleton k
@@ -90,5 +91,5 @@ aggregate f (MQuery xs) = MQuery (DL.fromList [f (DL.toList xs)])
 
 uniq :: Eq a => [a] -> [a]
 uniq (a:b:cs) | a == b  =   uniq (b:cs)
-uniq (a:b:cs)           = a:uniq (b:cs)
-uniq cs                 = cs
+uniq (a:b:cs) = a:uniq (b:cs)
+uniq cs       = cs

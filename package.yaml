@@ -5,7 +5,7 @@ description: Please see README.md
 category: Data, Conduit
 author: John Ky
 maintainer: newhoggy@gmail.com
-copyright: 2016 John Ky
+copyright: 2018 John Ky
 license: BSD3
 github: haskell-works/hw-mquery
 homepage: http://github.com/haskell-works/hw-mquery#readme
@@ -52,5 +52,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hspec
     - QuickCheck
+    - hedgehog
+    - hspec
+    - hw-hspec-hedgehog
