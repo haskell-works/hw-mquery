@@ -56,3 +56,4 @@ tests:
     - hedgehog
     - hspec
     - hw-hspec-hedgehog
+    - lens
