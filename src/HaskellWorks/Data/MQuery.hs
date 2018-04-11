@@ -15,8 +15,7 @@ import HaskellWorks.Data.Row
 import HaskellWorks.Data.ToBool
 import Text.PrettyPrint.ANSI.Leijen
 
-import qualified Data.DList    as DL
-import qualified Data.Foldable as F
+import qualified Data.DList as DL
 
 newtype MQuery a = MQuery (DL.DList a)
 
@@ -100,14 +99,18 @@ uniq cs       = cs
 infixl 1 >>^.
 infixl 1 >>^..
 
+instance Monoid (MQuery a) where
+  mempty = MQuery DL.empty
+  mappend (MQuery a) (MQuery b) = MQuery (a <> b)
+
 (/^.) :: Monad m => s -> Getting a s a -> m a
 (/^.) a g = return (a ^. g)
 
-(/^..) :: Foldable t => s -> Getting (t a) s (t a) -> MQuery a
-(/^..) a g = MQuery (DL.fromList (F.toList (a ^. g)))
+(/^..) :: (Monad m, Foldable t, Monoid (m a)) => s -> Getting (t a) s (t a) -> m a
+(/^..) a g = foldMap return (a ^. g)
 
 (>>^.) :: Monad m => m a -> Getting b a b -> m b
 (>>^.) q g = q >>= (/^. g)
 
-(>>^..) :: Foldable t => MQuery a -> Getting (t b) a (t b) -> MQuery b
+(>>^..) :: (Monad m, Foldable t, Monoid (m a), Monoid (m b)) => m a -> Getting (t b) a (t b) -> m b
 (>>^..) q g = q >>= (/^.. g)
