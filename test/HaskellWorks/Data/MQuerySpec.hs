@@ -16,6 +16,14 @@ import qualified HaskellWorks.Data.Model.Lens as L
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.MQuerySpec" $ do
+  it "Select into simple lens to boolean field" $ requireProperty $ do
+    let q = MQuery $ DL.fromList exampleMounts
+    let actual = F.toList $ q >>^. L.readOnly
+    actual === [True, False, False, False]
+  it "Select into simple lens to list" $ requireProperty $ do
+    let q = MQuery $ DL.fromList exampleMounts
+    let actual = F.toList $ q >>^. L.options
+    actual === [[], ["nosuid" , "noauto"], [], ["noexec"]]
   it "Select into lens to a foldable" $ requireProperty $ do
     let q = MQuery $ DL.fromList exampleMounts
     let actual = F.toList $ q >>^.. L.options
