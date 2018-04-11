@@ -6,6 +6,7 @@
 
 module HaskellWorks.Data.MQuery where
 
+import Control.Lens
 import Control.Monad
 import Data.List
 import GHC.Base
@@ -14,7 +15,8 @@ import HaskellWorks.Data.Row
 import HaskellWorks.Data.ToBool
 import Text.PrettyPrint.ANSI.Leijen
 
-import qualified Data.DList as DL
+import qualified Data.DList    as DL
+import qualified Data.Foldable as F
 
 newtype MQuery a = MQuery (DL.DList a)
 
@@ -23,6 +25,7 @@ deriving instance Applicative MQuery
 deriving instance Monad       MQuery
 deriving instance Alternative MQuery
 deriving instance MonadPlus   MQuery
+deriving instance Foldable    MQuery
 
 class IsPredicate a where
   type ArgOf a
@@ -93,3 +96,18 @@ uniq :: Eq a => [a] -> [a]
 uniq (a:b:cs) | a == b  =   uniq (b:cs)
 uniq (a:b:cs) = a:uniq (b:cs)
 uniq cs       = cs
+
+infixl 1 >>^.
+infixl 1 >>^..
+
+(/^.) :: Monad m => s -> Getting a s a -> m a
+(/^.) a g = return (a ^. g)
+
+(/^..) :: Foldable t => s -> Getting (t a) s (t a) -> MQuery a
+(/^..) a g = MQuery (DL.fromList (F.toList (a ^. g)))
+
+(>>^.) :: Monad m => m a -> Getting b a b -> m b
+(>>^.) q g = q >>= (/^. g)
+
+(>>^..) :: Foldable t => MQuery a -> Getting (t b) a (t b) -> MQuery b
+(>>^..) q g = q >>= (/^.. g)
