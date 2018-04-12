@@ -1,5 +1,6 @@
 module HaskellWorks.Data.MQuerySpec (spec) where
 
+import Control.Lens
 import HaskellWorks.Data.Model.Example
 import HaskellWorks.Data.MQuery
 import HaskellWorks.Hspec.Hedgehog
@@ -28,3 +29,8 @@ spec = describe "HaskellWorks.Data.MQuerySpec" $ do
     let q = MQuery $ DL.fromList exampleMounts
     let actual = F.toList $ q >>^.. L.options
     actual === ["nosuid" , "noauto" , "noexec"]
+  it "Select into lens to a foldable" $ requireProperty $ do
+    let q = MQuery $ DL.fromList exampleMounts
+    let actual = F.toList $ q <&> view L.options
+    actual === [[] , ["nosuid" , "noauto"] , [] , ["noexec"]]
+
