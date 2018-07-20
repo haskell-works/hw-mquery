@@ -9,6 +9,7 @@ module HaskellWorks.Data.MQuery where
 import Control.Lens
 import Control.Monad
 import Data.List
+import Data.Semigroup               (Semigroup, (<>))
 import GHC.Base
 import HaskellWorks.Data.Entry
 import HaskellWorks.Data.Row
@@ -98,6 +99,9 @@ uniq cs       = cs
 
 infixl 1 >>^.
 infixl 1 >>^..
+
+instance Semigroup (MQuery a) where
+  MQuery a <> MQuery b = MQuery (a <> b)
 
 instance Monoid (MQuery a) where
   mempty = MQuery DL.empty
