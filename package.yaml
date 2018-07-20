@@ -2,19 +2,23 @@ name: hw-mquery
 version: '0.1.0.2'
 synopsis: Monadic query DSL
 description: Please see README.md
-category: Data, Conduit
+category: Data
 author: John Ky
 maintainer: newhoggy@gmail.com
 copyright: 2018 John Ky
 license: BSD3
 github: haskell-works/hw-mquery
 homepage: http://github.com/haskell-works/hw-mquery#readme
+
 extra-source-files:
 - README.md
+
 ghc-options: -Wall
+
 dependencies:
 - base >=4 && <5
 - lens
+
 library:
   source-dirs: src
   ghc-options:
@@ -32,6 +36,7 @@ library:
   dependencies:
   - ansi-wl-pprint
   - dlist
+
 executables:
   hw-mquery-example:
     main: Main.hs
@@ -44,6 +49,7 @@ executables:
     - -msse4.2
     dependencies:
     - hw-mquery
+
 tests:
   hw-mquery-test:
     main: Spec.hs
