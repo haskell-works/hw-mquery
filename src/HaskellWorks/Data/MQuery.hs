@@ -14,7 +14,7 @@ import GHC.Base
 import HaskellWorks.Data.Entry
 import HaskellWorks.Data.Row
 import HaskellWorks.Data.ToBool
-import Text.PrettyPrint.ANSI.Leijen
+import Text.PrettyPrint.ANSI.Leijen hiding ((<>))
 
 import qualified Data.DList as DL
 
