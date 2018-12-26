@@ -22,10 +22,11 @@ source-repository head
 
 common base
   build-depends:
-      base  >=4   &&  <5
-    , ansi-wl-pprint
-    , dlist
-    , lens
+      base                >= 4          && < 5
+    , ansi-wl-pprint      >= 0.6.8      && < 0.7
+    , dlist               >= 0.8.0      && < 0.9
+    , lens                >= 4.17       && < 4.18
+    , semigroups          >= 0.18.5     && < 0.19
   ghc-options: -Wall -O2 -msse4.2
   default-language: Haskell2010
 
@@ -75,3 +76,4 @@ test-suite hw-mquery-test
       HaskellWorks.Data.Model.Lens
       HaskellWorks.Data.Model.Type
       HaskellWorks.Data.MQuerySpec
+  build-tools: hspec-discover
