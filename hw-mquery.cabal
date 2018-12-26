@@ -1,4 +1,4 @@
-cabal-version:  2.4
+cabal-version:  2.2
 
 name:           hw-mquery
 version:        0.1.0.2
