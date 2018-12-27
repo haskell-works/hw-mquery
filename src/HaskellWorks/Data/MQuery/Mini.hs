@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 
-module HaskellWorks.Data.Mini where
+module HaskellWorks.Data.MQuery.Mini where
 
-import HaskellWorks.Data.AtLeastSize
-import HaskellWorks.Data.Micro
+import HaskellWorks.Data.MQuery.AtLeastSize
+import HaskellWorks.Data.MQuery.Micro
 import Text.PrettyPrint.ANSI.Leijen
 
 import qualified Data.DList as DL

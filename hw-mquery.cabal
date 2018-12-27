@@ -36,14 +36,14 @@ library
       src
 
   exposed-modules:
-      HaskellWorks.Data.AtLeastSize
-      HaskellWorks.Data.Entry
-      HaskellWorks.Data.Micro
-      HaskellWorks.Data.Mini
       HaskellWorks.Data.MQuery
-      HaskellWorks.Data.Row
-      HaskellWorks.Data.Shows
-      HaskellWorks.Data.ToBool
+      HaskellWorks.Data.MQuery.AtLeastSize
+      HaskellWorks.Data.MQuery.Entry
+      HaskellWorks.Data.MQuery.Micro
+      HaskellWorks.Data.MQuery.Mini
+      HaskellWorks.Data.MQuery.Row
+      HaskellWorks.Data.MQuery.Shows
+      HaskellWorks.Data.MQuery.ToBool
   other-modules:
       Paths_hw_mquery
   autogen-modules:

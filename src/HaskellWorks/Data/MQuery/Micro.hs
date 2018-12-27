@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module HaskellWorks.Data.Micro where
+module HaskellWorks.Data.MQuery.Micro where
 
 import Text.PrettyPrint.ANSI.Leijen
 
@@ -23,9 +23,9 @@ prettyKvs []       = empty
 
 instance Pretty a => Pretty (Micro [a]) where
   pretty (Micro xs) = case length xs of
-    xsLen | xsLen == 0    -> text "[]"
-    xsLen | xsLen <= 10   -> text "[" <> prettyVs xs <> text "]"
-    _     -> text "[" <> prettyVs (take 10 xs) <> text ", ..]"
+    xsLen | xsLen == 0  -> text "[]"
+    xsLen | xsLen <= 10 -> text "[" <> prettyVs xs <> text "]"
+    _                   -> text "[" <> prettyVs (take 10 xs) <> text ", ..]"
 
 instance Pretty a => Pretty (Micro (DL.DList a)) where
   pretty (Micro dxs) = case DL.toList dxs of

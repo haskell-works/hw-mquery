@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 
-module HaskellWorks.Data.Row where
+module HaskellWorks.Data.MQuery.Row where
 
 import Text.PrettyPrint.ANSI.Leijen
 

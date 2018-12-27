@@ -1,4 +1,4 @@
-module HaskellWorks.Data.Entry where
+module HaskellWorks.Data.MQuery.Entry where
 
 import Text.PrettyPrint.ANSI.Leijen
 
