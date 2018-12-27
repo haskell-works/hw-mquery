@@ -165,9 +165,6 @@ workflows:
             - ghc-8.6.3
             - ghc-8.4.3
             - ghc-8.2.2
-          filters:
-            branches:
-              only: master
 
   tagged-release:
     jobs:
