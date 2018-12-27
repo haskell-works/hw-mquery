@@ -1,5 +1,5 @@
 
-module HaskellWorks.Data.ToBool where
+module HaskellWorks.Data.MQuery.ToBool where
 
 import qualified Data.DList as DL
 
@@ -10,8 +10,8 @@ instance ToBool Bool where
   toBool = id
 
 instance ToBool [a] where
-  toBool (_:_)  = True
-  toBool    _   = False
+  toBool (_:_) = True
+  toBool    _  = False
 
 instance ToBool (DL.DList a) where
   toBool = toBool . DL.toList

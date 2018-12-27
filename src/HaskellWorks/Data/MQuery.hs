@@ -9,12 +9,12 @@ module HaskellWorks.Data.MQuery where
 import Control.Lens
 import Control.Monad
 import Data.List
-import Data.Semigroup               (Semigroup, (<>))
+import Data.Semigroup                  (Semigroup, (<>))
 import GHC.Base
-import HaskellWorks.Data.Entry
-import HaskellWorks.Data.Row
-import HaskellWorks.Data.ToBool
-import Text.PrettyPrint.ANSI.Leijen hiding ((<>))
+import HaskellWorks.Data.MQuery.Entry
+import HaskellWorks.Data.MQuery.Row
+import HaskellWorks.Data.MQuery.ToBool
+import Text.PrettyPrint.ANSI.Leijen    hiding ((<>))
 
 import qualified Data.DList as DL
 

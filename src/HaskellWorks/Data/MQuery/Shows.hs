@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module HaskellWorks.Data.Shows where
+module HaskellWorks.Data.MQuery.Shows where
 
-import HaskellWorks.Data.Micro
+import HaskellWorks.Data.MQuery.Micro
 
 showsVs :: Show a => [a] -> String -> String
 showsVs (kv:kvs) = shows kv . foldl (.) id ((\jv -> (", " ++) . shows jv) `map` kvs)
