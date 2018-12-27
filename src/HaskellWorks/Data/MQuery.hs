@@ -101,11 +101,11 @@ infixl 1 >>^.
 infixl 1 >>^..
 
 instance Semigroup (MQuery a) where
-  MQuery a <> MQuery b = MQuery (a <> b)
+  MQuery a <> MQuery b = MQuery (a `DL.append` b)
 
 instance Monoid (MQuery a) where
   mempty = MQuery DL.empty
-  mappend (MQuery a) (MQuery b) = MQuery (a <> b)
+  mappend (MQuery a) (MQuery b) = MQuery (a `DL.append` b)
 
 (/^.) :: Monad m => s -> Getting a s a -> m a
 (/^.) a g = return (a ^. g)
