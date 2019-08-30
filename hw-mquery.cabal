@@ -31,8 +31,8 @@ common lens                 { build-depends: lens                 >= 4.17       
 common semigroups           { build-depends: semigroups           >= 0.18.5     && < 0.20   }
 
 common common
-  ghc-options: -Wall -msse4.2
-  default-language: Haskell2010
+  ghc-options:          -Wall -msse4.2
+  default-language:     Haskell2010
 
 library
   import: base, common
@@ -50,15 +50,15 @@ library
       HaskellWorks.Data.MQuery.Row
       HaskellWorks.Data.MQuery.Shows
       HaskellWorks.Data.MQuery.ToBool
-  other-modules:    Paths_hw_mquery
-  autogen-modules:  Paths_hw_mquery
+  other-modules:        Paths_hw_mquery
+  autogen-modules:      Paths_hw_mquery
 
 executable hw-mquery-example
   import: base, common
-  main-is: Main.hs
-  hs-source-dirs: app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
-  build-depends: hw-mquery
+  main-is:              Main.hs
+  hs-source-dirs:       app
+  ghc-options:          -threaded -rtsopts -with-rtsopts=-N
+  build-depends:        hw-mquery
 
 test-suite hw-mquery-test
   import: base, common
@@ -67,14 +67,14 @@ test-suite hw-mquery-test
         , hspec
         , hw-hspec-hedgehog
         , lens
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  hs-source-dirs: test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
-  build-depends: hw-mquery
+  type:                 exitcode-stdio-1.0
+  main-is:              Spec.hs
+  hs-source-dirs:       test
+  ghc-options:          -threaded -rtsopts -with-rtsopts=-N
+  build-depends:        hw-mquery
+  build-tool-depends:   hspec-discover:hspec-discover
   other-modules:
       HaskellWorks.Data.Model.Example
       HaskellWorks.Data.Model.Lens
       HaskellWorks.Data.Model.Type
       HaskellWorks.Data.MQuerySpec
-  build-tools: hspec-discover
