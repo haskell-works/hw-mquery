@@ -9,7 +9,6 @@ module HaskellWorks.Data.MQuery where
 import Control.Lens
 import Control.Monad
 import Data.List
-import Data.Semigroup                  (Semigroup, (<>))
 import GHC.Base
 import HaskellWorks.Data.MQuery.Entry
 import HaskellWorks.Data.MQuery.Row
