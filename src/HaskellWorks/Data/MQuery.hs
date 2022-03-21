@@ -104,7 +104,6 @@ instance Semigroup (MQuery a) where
 
 instance Monoid (MQuery a) where
   mempty = MQuery DL.empty
-  mappend (MQuery a) (MQuery b) = MQuery (a `DL.append` b)
 
 (/^.) :: Monad m => s -> Getting a s a -> m a
 (/^.) a g = return (a ^. g)
