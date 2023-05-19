@@ -22,7 +22,7 @@ source-repository head
 
 common base                       { build-depends: base                       >= 4.11       && < 5      }
 
-common ansi-wl-pprint             { build-depends: ansi-wl-pprint             >= 0.6.8      && < 0.7    }
+common ansi-wl-pprint             { build-depends: ansi-wl-pprint             >= 0.6.8      && < 2.0    }
 common dlist                      { build-depends: dlist                      >= 0.8.0      && < 1.1    }
 common doctest                    { build-depends: doctest                    >= 0.16.2     && < 0.21   }
 common doctest-discover           { build-depends: doctest-discover           >= 0.2        && < 0.3    }
