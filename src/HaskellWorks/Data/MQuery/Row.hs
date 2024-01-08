@@ -1,9 +1,10 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.MQuery.Row where
 
-import Text.PrettyPrint.ANSI.Leijen
+import Prettyprinter
 
 import qualified Data.DList as DL
 
@@ -12,11 +13,12 @@ type MaxChars = Int
 data Row a = Row MaxChars a
 
 instance Pretty a => Pretty (Row (DL.DList a)) where
-  pretty (Row maxChars xs) = vcat (((bold . yellow) (text "==> ") <>) `map` prettyRows)
-    where prettyRows :: [Doc]
-          prettyRows = (\row -> text (take maxChars (displayS (renderCompact (pretty row)) []))) `map` DL.toList xs
+  -- TODO implement max chars for Row
+  pretty (Row _ xs) = vcat (("==> " <>) `map` prettyRows)
+    where prettyRows :: [Doc ann]
+          prettyRows = fmap pretty $ DL.toList xs
 
-prettyRowOfString :: Show a => Row (DL.DList a) -> Doc
-prettyRowOfString (Row _ xs) = vcat (((bold . yellow) (text "==> ") <>) `map` prettyRows)
-  where prettyRows :: [Doc]
-        prettyRows = (text . show) `map` DL.toList xs
+prettyRowOfString :: Show a => Row (DL.DList a) -> Doc ann
+prettyRowOfString (Row _ xs) = vcat (("==> " <>) `map` prettyRows)
+  where prettyRows :: [Doc ann]
+        prettyRows = (pretty . show) `map` DL.toList xs
