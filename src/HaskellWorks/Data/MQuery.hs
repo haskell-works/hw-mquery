@@ -13,7 +13,7 @@ import GHC.Base
 import HaskellWorks.Data.MQuery.Entry
 import HaskellWorks.Data.MQuery.Row
 import HaskellWorks.Data.MQuery.ToBool
-import Text.PrettyPrint.ANSI.Leijen    hiding ((<>))
+import Prettyprinter
 
 import qualified Data.DList as DL
 
